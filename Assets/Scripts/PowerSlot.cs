@@ -95,9 +95,7 @@ namespace Powergrid
 
         public int GetPower()
         {
-            if (_storedObject != null)
-                return 1;
-            return 0;
+            return _storedObject?.GetComponent<DraggableObject>().Power ?? 0;
         }
     }
 }

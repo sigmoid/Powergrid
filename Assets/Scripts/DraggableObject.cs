@@ -7,6 +7,7 @@ namespace Powergrid
 {
     public class DraggableObject : MonoBehaviour, IDraggable
     {
+		public int Power = 1;
 		IDroppable _dropArea = null;
 
 		public void OnBeginDrag()
