@@ -12,7 +12,7 @@ public class InventoryPlacement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         Vector3 newPos = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 0));
         newPos.z = 10;

@@ -14,6 +14,9 @@ public class LevelManager : MonoBehaviour
     public float LinePadding;
     public UnityEvent OnLevelSolved;
     public UnityEvent OnLevelUnSolved;
+    public GameObject InactiveMask;
+
+    public bool IsActive;
 
     private List<PowerSlot> _slots;
     private Dictionary<PowerSlot, List<GameObject>> _lines;
@@ -26,7 +29,7 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         GetSlots();
-        BuildLineDictionary();
+        GenerateLines();
         ClearGrid();
     }
 
@@ -129,6 +132,7 @@ public class LevelManager : MonoBehaviour
 
     public bool CanAddPower(PowerSlot slot)
     {
+        if (!IsActive) return false;
         if (slot == null) return false;
         if (!_slots.Contains(slot)) return false;
 
@@ -143,6 +147,7 @@ public class LevelManager : MonoBehaviour
 
     public bool CanRemovePower(PowerSlot slot)
     {
+        if (!IsActive) return false;
         if (slot == null) return false;
         if (!_slots.Contains(slot)) return false;
 
@@ -169,22 +174,22 @@ public class LevelManager : MonoBehaviour
         if (destination.IsAnchor && !destination.Removed)
             return true;
 
-		foreach (var slot in _slots)
-		{
-			if (slot == destination)
-				continue;
+        foreach (var slot in _slots)
+        {
+            if (slot == destination)
+                continue;
 
-			if (slot.IsAnchor && !slot.Removed)
-			{
-				if (Search(slot, destination, slot.GetPower()+1, new HashSet<PowerSlot>()))
-				{
-					return true;
-				}
-			}
-		}
+            if (slot.IsAnchor && !slot.Removed)
+            {
+                if (Search(slot, destination, slot.GetPower() + 1, new HashSet<PowerSlot>()))
+                {
+                    return true;
+                }
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
     public bool Search(PowerSlot start, PowerSlot destination, int maxDepth, HashSet<PowerSlot> seenSlots)
     {
@@ -211,46 +216,46 @@ public class LevelManager : MonoBehaviour
         return false;
     }
 
-	#endregion
+    #endregion
 
-	#region Line Generation
+    #region Line Generation
 
-	public void GenerateLines()
+    public void GenerateLines()
     {
         ClearExistingLines();
-		CreateLines();
-	}
+        CreateLines();
+    }
 
     private void ClearExistingLines()
     {
         foreach (var item in LineTransform.GetComponentsInChildren<Transform>())
         {
-            if(item != LineTransform)
+            if (item != LineTransform)
                 GameObject.DestroyImmediate(item.gameObject);
         }
-       
+
         _lines = new Dictionary<PowerSlot, List<GameObject>>();
-	}
+    }
 
     private void CreateLines()
     {
-		_slots = GetComponentsInChildren<PowerSlot>().ToList();
+        _slots = GetComponentsInChildren<PowerSlot>().ToList();
 
-		foreach (var slot in _slots)
-		{
+        foreach (var slot in _slots)
+        {
             _lines[slot] = new List<GameObject>();
 
             foreach (var connect in slot.OutgoingConnections)
             {
                 _lines[slot].Add(CreateLine(slot, connect));
             }
-		}
-	}
+        }
+    }
 
     private GameObject CreateLine(PowerSlot pointA, PowerSlot pointB)
     {
         Vector3 midPoint = Vector3.Lerp(pointA.transform.position, pointB.transform.position, 0.5f);
-        GameObject res = Instantiate(LinePrefab,LineTransform);
+        GameObject res = Instantiate(LinePrefab, LineTransform);
         res.name = "line," + pointA.name + "," + pointB.name;
 
         var lineRenderer = res.GetComponent<LineRenderer>();
@@ -262,41 +267,57 @@ public class LevelManager : MonoBehaviour
 
             lineRenderer.SetPosition(0, startingPos + startingDir * LinePadding);
 
-			startingPos = pointB.transform.position;
-			startingDir = pointA.transform.position - pointB.transform.position;
-			startingDir.Normalize();
+            startingPos = pointB.transform.position;
+            startingDir = pointA.transform.position - pointB.transform.position;
+            startingDir.Normalize();
 
-			lineRenderer.SetPosition(1, startingPos + startingDir * LinePadding);
+            lineRenderer.SetPosition(1, startingPos + startingDir * LinePadding);
         }
 
         return res;
     }
 
-    private void BuildLineDictionary()
+    //private void BuildLineDictionary()
+    //{
+    //    _lines = new Dictionary<PowerSlot, List<GameObject>>();
+
+    //    foreach (var item in LineTransform.GetComponentsInChildren<Transform>())
+    //    {
+    //        if (item == LineTransform)
+    //            continue;
+
+    //        var names = item.gameObject.name.Split(',');
+
+    //        if (names.Length < 2)
+    //            continue;
+
+    //        var startGameObject = GameObject.Find(names[1]).GetComponent<PowerSlot>();
+
+    //        if (startGameObject == null)
+    //            return;
+
+    //        if (!_lines.ContainsKey(startGameObject))
+    //            _lines[startGameObject] = new List<GameObject>();
+
+    //        _lines[startGameObject].Add(item.gameObject);
+    //    }
+    //}
+
+    #endregion
+
+    #region Activate / Deactivate
+
+    public void Activate()
     {
-        _lines = new Dictionary<PowerSlot, List<GameObject>>();
+        IsActive = true;
+        InactiveMask.SetActive(false);
+    }
 
-		foreach (var item in LineTransform.GetComponentsInChildren<Transform>())
-		{
-            if (item == LineTransform)
-                continue;
-
-            var names = item.gameObject.name.Split(',');
-            
-            if (names.Length < 2)
-                continue;
-
-            var startGameObject = GameObject.Find(names[1]).GetComponent<PowerSlot>();
-
-            if (startGameObject == null)
-                return;
-
-            if (!_lines.ContainsKey(startGameObject))
-                _lines[startGameObject] = new List<GameObject>();
-
-            _lines[startGameObject].Add(item.gameObject);
-		}
-	}
+    public void Deactivate()
+    {
+        IsActive = false;
+        InactiveMask.SetActive(true);
+    }
 
 	#endregion
 }
