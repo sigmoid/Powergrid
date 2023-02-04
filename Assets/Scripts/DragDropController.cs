@@ -68,7 +68,7 @@ public class DragDropController : MonoBehaviour
             {
                 _draggingObject = hit.transform.gameObject;
                 _dragObjectOffset = new Vector3(hit.point.x, hit.point.y) - hit.transform.position;
-                _dragObjectOriginalPos = hit.transform.position;
+                _dragObjectOriginalPos = hit.transform.localPosition;
                 _draggingObject.GetComponent<IDraggable>().OnBeginDrag();
             }
         }
@@ -77,7 +77,7 @@ public class DragDropController : MonoBehaviour
         {
             if (!_draggingObject.GetComponent<IDraggable>().OnEndDrag())
             {
-                _draggingObject.transform.position = _dragObjectOriginalPos;
+                _draggingObject.transform.localPosition = _dragObjectOriginalPos;
             }
 
             _draggingObject = null;
