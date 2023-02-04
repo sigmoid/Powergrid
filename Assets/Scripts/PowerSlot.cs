@@ -13,6 +13,7 @@ namespace Powergrid
         public bool IsStart;
         public bool IsAnchor;
         public bool Removed;
+        public bool IsGoal;
 
         private GameObject _storedObject;
         private int _activeConnections = 0;
@@ -36,6 +37,10 @@ namespace Powergrid
 
         public bool CanDrop()
         {
+            if (GetComponentInParent<LevelManager>() == null)
+            {
+                return true;
+            }
             return GetComponentInParent<LevelManager>().CanAddPower(this);
         }
 

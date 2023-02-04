@@ -43,7 +43,7 @@ public class LevelManager : MonoBehaviour
     {
         foreach (var slot in _slots)
         {
-            if (!slot.IsStart)
+            if (!slot.IsStart && !slot.IsGoal)
                 slot.gameObject.SetActive(false);
         }
 

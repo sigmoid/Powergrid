@@ -39,6 +39,8 @@ namespace Powergrid
 			var slot = GetComponentInParent<PowerSlot>();
 			if (slot != null)
 			{
+				if (GetComponentInParent<LevelManager>() == null)
+					return true;
 				return GetComponentInParent<LevelManager>().CanRemovePower(slot);
 			}
 			return true;

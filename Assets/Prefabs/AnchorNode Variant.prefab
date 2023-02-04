@@ -25,8 +25,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7029404658099317884}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0671736, y: -0.93163717, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.0671736, y: -0.67, z: 0}
+  m_LocalScale: {x: 0.54038, y: 0.54038, z: 0.54038}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8856843088725699630}
@@ -137,11 +137,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3022362774190760334, guid: 58f1daf3021fed44dbf49c8f0d537d12, type: 3}
       propertyPath: m_Name
-      value: AnchorNode
+      value: AnchorNode Variant
       objectReference: {fileID: 0}
     - target: {fileID: 8430878112707151334, guid: 58f1daf3021fed44dbf49c8f0d537d12, type: 3}
       propertyPath: IsStart
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8430878112707151334, guid: 58f1daf3021fed44dbf49c8f0d537d12, type: 3}
       propertyPath: IsAnchor
@@ -149,7 +149,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8430878112707151334, guid: 58f1daf3021fed44dbf49c8f0d537d12, type: 3}
       propertyPath: OutgoingConnections.Array.size
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8430878112707151334, guid: 58f1daf3021fed44dbf49c8f0d537d12, type: 3}
       propertyPath: OutgoingConnections.Array.data[0]
