@@ -832,7 +832,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MovementSpeed: 10
-  ZoomSpeed: 4000
+  ZoomSpeed: -4000
   MaxZoom: 20
   MinZoom: 3
   Camera: {fileID: 519420031}
