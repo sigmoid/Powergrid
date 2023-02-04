@@ -174,6 +174,7 @@ public class LevelManager : MonoBehaviour
                     line.IsActive = true;
                     line.GameObject.SendMessage("Activate");
                     line.EndSlot.gameObject.SendMessage("Activate");
+                    line.EndSlot.AddPowerFrom(node);
                     Distribute(_lines[node][i].EndSlot, power - 1, seen);
                 }
             }

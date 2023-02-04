@@ -20,6 +20,8 @@ namespace Powergrid
 
         private bool _IsActive;
 
+        protected HashSet<PowerSlot> _powerFrom = new HashSet<PowerSlot>();
+
 
 		public void OnDrop(GameObject droppedObject)
 		{
@@ -83,7 +85,7 @@ namespace Powergrid
 
         public void Deactivate()
         {
-            _activeConnections = 0;
+            ClearPower();
         }
 
         public void PowerUp(int remainingPower)
@@ -100,7 +102,17 @@ namespace Powergrid
             gameObject.SendMessage("OnUnpowered", SendMessageOptions.DontRequireReceiver);
 		}
 
-        public int GetPower()
+        public void AddPowerFrom(PowerSlot other)
+        {
+            _powerFrom.Add(other);
+        }
+
+        public void ClearPower()
+        {
+            _powerFrom.Clear();
+        }
+
+        public virtual int GetPower()
         {
             return _storedObject?.GetComponent<DraggableObject>().Power ?? 0;
         }
