@@ -387,6 +387,11 @@ public class LevelManager : MonoBehaviour
 
         Vector3 midPoint = Vector3.Lerp(pointA.transform.position, pointB.transform.position, 0.5f);
         res.GameObject = Instantiate(LinePrefab, LineTransform);
+        res.GameObject.transform.position = midPoint;
+        Vector3 dir = pointB.transform.position - pointA.transform.position;
+        dir.Normalize();
+        float theta = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        res.GameObject.transform.rotation = Quaternion.AngleAxis(theta ,Vector3.forward);
         res.GameObject.name = "line," + pointA.name + "," + pointB.name;
 
         var lineRenderer = res.GameObject.GetComponent<LineRenderer>();

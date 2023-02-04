@@ -10,6 +10,8 @@ namespace Powergrid
 		public int Power = 1;
 		IDroppable _dropArea = null;
 
+		private bool _hasBeenPlaced = false;
+
 		public void OnBeginDrag()
 		{
 			if (_dropArea != null)
@@ -23,19 +25,22 @@ namespace Powergrid
 			var dropArea = GetDropArea();
 			if (dropArea == null)
 			{
-				_dropArea?.OnDrop(this.gameObject);
 				return false;
 			}
 			else
 			{
 				_dropArea = dropArea;
 				dropArea?.OnDrop(this.gameObject);
+				_hasBeenPlaced = true;
 				return true;
 			}
 		}
 
 		public bool CanDrag()
 		{
+			if (!_hasBeenPlaced)
+				return true;
+
 			var slot = GetComponentInParent<PowerSlot>();
 			if (slot != null)
 			{
