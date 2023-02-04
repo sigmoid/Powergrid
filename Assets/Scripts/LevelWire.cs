@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class LevelWire : MonoBehaviour
 {
-    public SpriteRenderer SpriteRenderer;
+    public List<SpriteRenderer> SpriteRenderers;
 
     public Color ActiveColor;
     public Color InactiveColor;
@@ -33,14 +33,16 @@ public class LevelWire : MonoBehaviour
     public void Activate()
     {
         IsActive = true;
-        SpriteRenderer.color = ActiveColor;
+        foreach(var SpriteRenderer in SpriteRenderers)
+            SpriteRenderer.color = ActiveColor;
         OnActivate.Invoke();
     }
 
     public void Deactivate()
     {
         IsActive = false;
-        SpriteRenderer.color = InactiveColor;
-        OnDeactivate.Invoke();
+		foreach (var SpriteRenderer in SpriteRenderers)
+			SpriteRenderer.color = InactiveColor;
+		OnDeactivate.Invoke();
     }
 }
