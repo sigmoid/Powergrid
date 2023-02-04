@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 
 public class LevelManager : MonoBehaviour
@@ -11,11 +12,15 @@ public class LevelManager : MonoBehaviour
     public GameObject LinePrefab;
     public Transform LineTransform;
     public float LinePadding;
+    public UnityEvent OnLevelSolved;
+    public UnityEvent OnLevelUnSolved;
 
     private List<PowerSlot> _slots;
     private Dictionary<PowerSlot, List<GameObject>> _lines;
 
     private const int MAX_DEPTH = 3;
+    private bool _isSolved;
+    private bool _lastIsSolved;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +34,12 @@ public class LevelManager : MonoBehaviour
     void Update()
     {
         UpdateGrid();
+
+        if (_isSolved && !_lastIsSolved)
+            OnLevelSolved.Invoke();
+        else if (!_isSolved && _lastIsSolved)
+            OnLevelUnSolved.Invoke();
+        _lastIsSolved = _isSolved;
     }
 
     private void GetSlots()
@@ -77,12 +88,17 @@ public class LevelManager : MonoBehaviour
     private void UpdateGrid()
     {
         ResetGrid();
+        _isSolved = true;
 
         foreach (var node in _slots)
         {
             if (node.GetPower() > 0)
             {
                 Distribute(node, node.GetPower(), new HashSet<PowerSlot>());
+            }
+            if (node.IsGoal && node.GetPower() == 0)
+            {
+                _isSolved = false;
             }
         }
     }
