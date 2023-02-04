@@ -35,13 +35,13 @@ namespace Powergrid
             PowerDown();
         }
 
-        public bool CanDrop()
+        public bool CanDrop(int power)
         {
             if (GetComponentInParent<LevelManager>() == null)
             {
                 return true;
             }
-            return GetComponentInParent<LevelManager>().CanAddPower(this);
+            return GetComponentInParent<LevelManager>().CanAddPower(this, power);
         }
 
 		// Start is called before the first frame update
@@ -55,9 +55,16 @@ namespace Powergrid
 
         }
 
-        public void Connect(PowerSlot other, int remainingPower)
+        public void Connect(PowerSlot other, int remainingPower, HashSet<PowerSlot> seen = null)
         {
-            if (remainingPower > 0)
+			if (seen == null || seen.Contains(this))
+				return;
+
+			if (seen == null)
+				seen = new HashSet<PowerSlot>();
+			seen.Add(this);
+
+			if (remainingPower > 0)
                 PowerUp(remainingPower);
         }
 
@@ -82,20 +89,15 @@ namespace Powergrid
         public void PowerUp(int remainingPower)
         {
             SpriteRenderer.sprite = PoweredOnSprite;
-
-            foreach (var connect in OutgoingConnections)
-            {
-                // TODO, recursively find children
-                connect.Connect(this, 1);
-            }
-
             _IsActive = true;
+            gameObject.SendMessage("OnPowered", SendMessageOptions.DontRequireReceiver);
         }
 
         public void PowerDown()
         {
             _storedObject = null;
             _IsActive = false;
+            gameObject.SendMessage("OnUnpowered", SendMessageOptions.DontRequireReceiver);
 		}
 
         public int GetPower()

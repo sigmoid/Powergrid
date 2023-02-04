@@ -72,7 +72,7 @@ namespace Powergrid
 
 			foreach (var hit in hitInfo)
 			{
-				if (hit.GetComponent<IDroppable>()?.CanDrop() ?? false)
+				if (hit.GetComponent<IDroppable>()?.CanDrop(this.Power) ?? false)
 				{
 					return hit.GetComponent<IDroppable>();
 				}

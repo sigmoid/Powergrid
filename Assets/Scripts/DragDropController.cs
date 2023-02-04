@@ -14,7 +14,7 @@ namespace Powergrid
     {
         void OnDragOff();
         void OnDrop(GameObject droppedObject);
-        bool CanDrop();
+        bool CanDrop(int power);
     }
 
 public class DragDropController : MonoBehaviour
