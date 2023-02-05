@@ -240,7 +240,7 @@ public class LevelManager : MonoBehaviour
 
             if (slot.IsAnchor && !slot.Removed)
             {
-                if (Search(slot, destination, slot.GetPower() + 1, new HashSet<PowerSlot>()))
+                if (Search(slot, destination, slot.GetPower() + 1, new HashSet<PowerSlot>()) != null)
                 {
                     return true;
                 }
@@ -250,22 +250,55 @@ public class LevelManager : MonoBehaviour
         return false;
     }
 
-    public bool Search(PowerSlot start, PowerSlot destination, int maxDepth, HashSet<PowerSlot> seenSlots)
+    public bool CanAnchorFindTwice(PowerSlot destination)
+    {
+		if (destination.IsAnchor && !destination.Removed)
+			return true;
+
+		foreach (var slot in _slots)
+		{
+			if (slot == destination)
+				continue;
+
+			if (slot.IsAnchor && !slot.Removed)
+			{
+                HashSet<PowerSlot> foundSet = new HashSet<PowerSlot>();
+                var round1 = Search(slot, destination, slot.GetPower() + 1, foundSet);
+				if (round1 != null)
+				{
+                    foundSet = new HashSet<PowerSlot>();
+                    foreach (var s in round1)
+                    {
+                        if(s != slot)
+                            foundSet.Add(s);
+                    }
+                    if(Search(slot, destination, slot.GetPower() + 1, foundSet) != null)
+					    return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+    public List<PowerSlot> Search(PowerSlot start, PowerSlot destination, int maxDepth, HashSet<PowerSlot> seenSlots)
     {
         if (maxDepth <= 0)
-            return false;
+            return null;
 
         if (start == destination)
-            return true;
+            return new List<PowerSlot>() { start };
 
         if (seenSlots.Contains(start))
-            return false;
+            return null;
 
-
+        if (start is AndGate && !CanAnchorFindTwice(start))
+            return null;
 
         seenSlots.Add(start);
 
         var currentPower = start.Removed ? 0 : start.GetPower();
+        currentPower = Mathf.Min(currentPower, start.ConvertPower(maxDepth));
 
 
         foreach (var connect in _lines[start])
@@ -295,11 +328,18 @@ public class LevelManager : MonoBehaviour
                 }
             }
 
-            if (!hasConflict && ! isLocked && Search(connect.EndSlot, destination, Mathf.Max(maxDepth - 1, currentPower), seenSlots))
-                return true;
+            if (!hasConflict && !isLocked)
+            {
+                var res = Search(connect.EndSlot, destination, Mathf.Max(maxDepth - 1, currentPower), seenSlots);
+                if (res != null)
+                {
+                    res.Insert(0, start);
+                    return res;
+                }
+            }
         }
 
-        return false;
+        return null;
     }
 
     public bool HasOverlaps(PowerSlot slot, int power, HashSet<PowerSlot> seenSlots = null)

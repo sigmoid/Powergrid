@@ -36,6 +36,11 @@ namespace Powergrid
 			}
 		}
 
+		public void Return()
+		{
+			_dropArea.OnDrop(this.gameObject);
+		}
+
 		public bool CanDrag()
 		{
 			if (!_hasBeenPlaced)

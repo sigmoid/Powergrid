@@ -24,5 +24,12 @@ namespace Powergrid
                 return 1;
             return 0;
         }
-    }
+
+		public override int ConvertPower(int inputPower)
+        {
+			if (_powerFrom.Count == 2)
+				return 1;
+			return 0;
+		}
+	}
 }

@@ -9,13 +9,14 @@ namespace Powergrid
         public bool CanDrag();
         void OnBeginDrag();
         bool OnEndDrag();
-    }
+		void Return();
+	}
     public interface IDroppable
     {
         void OnDragOff();
         void OnDrop(GameObject droppedObject);
         bool CanDrop(int power);
-    }
+	}
 
 public class DragDropController : MonoBehaviour
     {
@@ -77,6 +78,7 @@ public class DragDropController : MonoBehaviour
         {
             if (!_draggingObject.GetComponent<IDraggable>().OnEndDrag())
             {
+                _draggingObject.GetComponent<IDraggable>().Return();
                 _draggingObject.transform.localPosition = _dragObjectOriginalPos;
             }
 

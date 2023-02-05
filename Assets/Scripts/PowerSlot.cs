@@ -112,6 +112,12 @@ namespace Powergrid
             _powerFrom.Clear();
         }
 
+        public virtual int ConvertPower(int inputPower)
+        {
+            return inputPower;
+        }
+
+
         public virtual int GetPower()
         {
             return _storedObject?.GetComponent<DraggableObject>().Power ?? 0;
