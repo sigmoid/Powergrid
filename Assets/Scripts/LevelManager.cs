@@ -165,7 +165,18 @@ public class LevelManager : MonoBehaviour
                     foreach (var competitor in line.CompetingLineSegments)
                     {
                         if (competitor.IsActive)
+                        {
                             hasConflict = true;
+                            if (competitor.ConnectedLocks != null)
+                            {
+                                foreach (var lck in competitor.ConnectedLocks) {
+                                    if (lck.IsLocked)
+                                    {
+                                        hasConflict = false;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 

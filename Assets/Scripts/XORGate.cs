@@ -20,14 +20,15 @@ namespace Powergrid
 
 		public override int GetPower()
 		{
-			if (_powerFrom.Count == 1)
+			if (GetComponentInParent<LevelManager>().CanAnchorExactlyOnce(this))
 				return 1;
 			return 0;
+
 		}
 
 		public override int ConvertPower(int inputPower)
 		{
-			if (_powerFrom.Count == 1)
+			if (GetComponentInParent<LevelManager>().CanAnchorExactlyOnce(this))
 				return 1;
 			return 0;
 		}
