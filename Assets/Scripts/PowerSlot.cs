@@ -15,7 +15,10 @@ namespace Powergrid
         public bool Removed;
         public bool IsGoal;
 
-        private GameObject _storedObject;
+		public AudioClip PowerUpSound;
+		public AudioClip RejectSound;
+
+		private GameObject _storedObject;
         private int _activeConnections = 0;
 
         private bool _IsActive;
@@ -29,6 +32,9 @@ namespace Powergrid
             droppedObject.transform.localPosition = new Vector3(0,0, -1);
             _storedObject = droppedObject;
 
+            if(PowerUpSound != null)
+                FindObjectOfType<AudioManager>().PlayClip(PowerUpSound, 0.5f);
+
             PowerUp(1);
 		}
 
@@ -39,11 +45,18 @@ namespace Powergrid
 
         public bool CanDrop(int power)
         {
+            if (_storedObject != null)
+                return false;
+
             if (GetComponentInParent<LevelManager>() == null)
             {
                 return true;
             }
-            return GetComponentInParent<LevelManager>().CanAddPower(this, power);
+            if(GetComponentInParent<LevelManager>().CanAddPower(this, power))
+                return true;
+
+            FindObjectOfType<AudioManager>().PlayClip(RejectSound, 0.5f);
+            return false;
         }
 
 		// Start is called before the first frame update

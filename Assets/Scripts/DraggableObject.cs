@@ -38,7 +38,8 @@ namespace Powergrid
 
 		public void Return()
 		{
-			_dropArea.OnDrop(this.gameObject);
+			if(_dropArea != null)
+				_dropArea.OnDrop(this.gameObject);
 		}
 
 		public bool CanDrag()

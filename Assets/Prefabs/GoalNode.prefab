@@ -145,6 +145,8 @@ MonoBehaviour:
   IsAnchor: 0
   Removed: 0
   IsGoal: 1
+  PowerUpSound: {fileID: 8300000, guid: 4c6796730dd86bd4c991d6443e176d55, type: 3}
+  RejectSound: {fileID: 8300000, guid: ad71bd28e75d47841bb8829cc3b2bc40, type: 3}
 --- !u!1 &7651753089364123868
 GameObject:
   m_ObjectHideFlags: 0

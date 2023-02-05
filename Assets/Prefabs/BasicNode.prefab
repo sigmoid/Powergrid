@@ -141,3 +141,8 @@ MonoBehaviour:
   PoweredOnSprite: {fileID: 21300000, guid: 96563f14a241231419b91a4399117779, type: 3}
   PoweredOffSprite: {fileID: 21300000, guid: 99a6ec856cc49f64db38bdfb668db5b0, type: 3}
   IsStart: 0
+  IsAnchor: 0
+  Removed: 0
+  IsGoal: 0
+  PowerUpSound: {fileID: 8300000, guid: ebff5af9304be414cb8a811b795f050c, type: 3}
+  RejectSound: {fileID: 8300000, guid: ad71bd28e75d47841bb8829cc3b2bc40, type: 3}

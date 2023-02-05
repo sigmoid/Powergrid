@@ -281,7 +281,40 @@ public class LevelManager : MonoBehaviour
 		return false;
 	}
 
-    public List<PowerSlot> Search(PowerSlot start, PowerSlot destination, int maxDepth, HashSet<PowerSlot> seenSlots)
+	public bool CanAnchorExactlyOnce(PowerSlot destination)
+	{
+		if (destination.IsAnchor && !destination.Removed)
+			return true;
+
+		foreach (var slot in _slots)
+		{
+			if (slot == destination)
+				continue;
+
+			if (slot.IsAnchor && !slot.Removed)
+			{
+				HashSet<PowerSlot> foundSet = new HashSet<PowerSlot>();
+				var round1 = Search(slot, destination, slot.GetPower() + 1, foundSet);
+				if (round1 != null)
+				{
+					foundSet = new HashSet<PowerSlot>();
+					foreach (var s in round1)
+					{
+						if (s != slot)
+							foundSet.Add(s);
+					}
+					if (Search(slot, destination, slot.GetPower() + 1, foundSet) != null)
+						return false;
+
+                    return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public List<PowerSlot> Search(PowerSlot start, PowerSlot destination, int maxDepth, HashSet<PowerSlot> seenSlots)
     {
         if (maxDepth <= 0)
             return null;
@@ -293,6 +326,9 @@ public class LevelManager : MonoBehaviour
             return null;
 
         if (start is AndGate && !CanAnchorFindTwice(start))
+            return null;
+
+        if (start is XORGate && !CanAnchorExactlyOnce(start))
             return null;
 
         seenSlots.Add(start);
@@ -528,12 +564,16 @@ public class LevelManager : MonoBehaviour
 
     public void Activate()
     {
+        if (_isSolved)
+            OnLevelSolved.Invoke();
         IsActive = true;
         InactiveMask.SetActive(false);
     }
 
     public void Deactivate()
     {
+        if (_isSolved)
+            OnLevelUnSolved.Invoke();
         IsActive = false;
         InactiveMask.SetActive(true);
     }
